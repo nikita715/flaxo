@@ -2,7 +2,6 @@ package org.flaxo.rest.manager.gitplag
 
 import io.gitplag.gitplagapi.model.input.AnalysisRequest
 import io.gitplag.gitplagapi.model.input.RepositoryInput
-import io.gitplag.gitplagapi.model.output.analysis.AnalysisResult
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.http.Body
@@ -18,7 +17,7 @@ interface GitplagClient {
     /**
      * Analyzes a task of a course.
      */
-    @POST("/api/repositories/{vcsService}/{username}/{projectName}/analyze")
+    @POST("/api/repositories/{vcsService}/{username}/{projectName}/analyze/detached")
     fun analyse(@Path("vcsService")
                 vcsService: String,
                 @Path("username")
@@ -27,7 +26,7 @@ interface GitplagClient {
                 projectName: String,
                 @Body
                 analysisRequest: AnalysisRequest
-    ): Call<AnalysisResult>
+    ): Call<ResponseBody>
 
     /**
      * Adds a repository to Gitplag.

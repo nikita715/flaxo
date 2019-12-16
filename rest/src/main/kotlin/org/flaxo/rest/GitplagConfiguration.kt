@@ -1,7 +1,8 @@
 package org.flaxo.rest
 
 import org.flaxo.rest.manager.gitplag.GitplagClient
-import org.flaxo.rest.manager.plagiarism.GitplagPlagiarismAnalyser
+import org.flaxo.rest.manager.moss.GitplagMossManager
+import org.flaxo.rest.manager.moss.MossManager
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.context.annotation.Bean
@@ -15,12 +16,11 @@ import org.springframework.context.annotation.Configuration
 class GitplagConfiguration {
 
     /**
-     * [GitplagPlagiarismAnalyser] bean
+     * [GitplagMossManager] bean
      */
     @Bean
     fun gitplagPlagiarismAnalyser(
             gitplagClient: GitplagClient,
-            @Value("\${flaxo.gitplag.ui.url}") gitplagUiUrl: String
-    ): GitplagPlagiarismAnalyser =
-            GitplagPlagiarismAnalyser(gitplagClient, gitplagUiUrl)
+            @Value("\${REST_URL}") restUrl: String
+    ): MossManager = GitplagMossManager(gitplagClient, restUrl)
 }
