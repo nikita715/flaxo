@@ -32,7 +32,7 @@ class GitplagManager(private val gitplagClient: GitplagClient) : ValidationManag
                 filePatterns = language.extensions.map { """.+\.$it""" },
                 analysisMode = AnalysisMode.FULL
         )).callUnit()
-        gitplagClient.updateRepository(
+        gitplagClient.updateRepositoryFiles(
                 vcsService = "github",
                 username = userGithubId,
                 projectName = course.name
@@ -41,7 +41,26 @@ class GitplagManager(private val gitplagClient: GitplagClient) : ValidationManag
 
     override fun deactivate(course: Course) = Unit
 
-    override fun refresh(course: Course) = Unit
+    override fun refresh(course: Course) {
+        val language = Language.from(course.settings.language)
+                ?: throw UnsupportedLanguageException("Course ${course.name} does not have language property")
+        val userGithubId = course.user.githubId
+                ?: throw ModelException("Github id for ${course.user.name} user was not found")
+        gitplagClient.updateRepository(
+                "github",
+                userGithubId,
+                course.name,
+                RepositoryInput(
+                id = -1, // any value because id is not nullable in the dto
+                git = GitProperty.GITHUB,
+                language = toGitplagLanguage(language),
+                name = "$userGithubId/${course.name}",
+                analyzer = AnalyzerProperty.MOSS,
+                filePatterns = course.settings.filePatterns?.let { setOf(it) }
+                        ?: language.extensions.map { """.+\.$it""" },
+                analysisMode = AnalysisMode.FULL
+        )).callUnit()
+    }
 
     private fun <T> Call<T>.call(): Either<ResponseBody, T> =
             execute().run {

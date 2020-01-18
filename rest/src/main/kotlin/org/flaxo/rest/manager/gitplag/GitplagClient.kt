@@ -8,6 +8,7 @@ import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.PUT
 import retrofit2.http.Path
 
 /**
@@ -36,10 +37,22 @@ interface GitplagClient {
     fun addRepository(@Body repository: RepositoryInput): Call<ResponseBody>
 
     /**
+     * Updates the repository in Gitplag.
+     */
+    @PUT("/api/repositories/{vcsService}/{username}/{projectName}")
+    fun updateRepository(@Path("vcsService")
+                         vcsService: String,
+                         @Path("username")
+                         username: String,
+                         @Path("projectName")
+                         projectName: String,
+                         @Body repository: RepositoryInput): Call<ResponseBody>
+
+    /**
      * Updates files of a repository in Gitplag.
      */
     @GET("/api/repositories/{vcsService}/{username}/{projectName}/files/update/detached")
-    fun updateRepository(@Path("vcsService")
+    fun updateRepositoryFiles(@Path("vcsService")
                          vcsService: String,
                          @Path("username")
                          username: String,
