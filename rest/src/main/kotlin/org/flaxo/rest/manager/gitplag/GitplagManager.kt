@@ -24,12 +24,11 @@ class GitplagManager(private val gitplagClient: GitplagClient) : ValidationManag
         val userGithubId = course.user.githubId
                 ?: throw ModelException("Github id for ${course.user.name} user was not found")
         gitplagClient.addRepository(RepositoryInput(
-                id = -1, // any value because id is not nullable in the dto
                 git = GitProperty.GITHUB,
                 language = toGitplagLanguage(language),
                 name = "$userGithubId/${course.name}",
                 analyzer = AnalyzerProperty.MOSS,
-                filePatterns = language.extensions.map { """.+\.$it""" },
+                filePatterns = listOf(language.extensionsRegexp),
                 analysisMode = AnalysisMode.FULL
         )).callUnit()
         gitplagClient.updateRepositoryFiles(
@@ -51,13 +50,11 @@ class GitplagManager(private val gitplagClient: GitplagClient) : ValidationManag
                 userGithubId,
                 course.name,
                 RepositoryInput(
-                id = -1, // any value because id is not nullable in the dto
                 git = GitProperty.GITHUB,
                 language = toGitplagLanguage(language),
                 name = "$userGithubId/${course.name}",
                 analyzer = AnalyzerProperty.MOSS,
-                filePatterns = course.settings.filePatterns?.let { setOf(it) }
-                        ?: language.extensions.map { """.+\.$it""" },
+                filePatterns = listOf(course.settings.filePatterns ?: language.extensionsRegexp),
                 analysisMode = AnalysisMode.FULL
         )).callUnit()
     }

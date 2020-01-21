@@ -102,7 +102,7 @@ open class PlainDataManager(private val userRepository: UserRepository,
                 .save(CourseSettings(
                         language = language,
                         testingLanguage = testingLanguage,
-                        filePatterns = language?.let(Language::valueOf)?.extensions?.joinToString(separator = "\n") { """.+\.$it""" },
+                        filePatterns = language?.let(Language::valueOf)?.extensionsRegexp,
                         testingFramework = testingFramework
                 ))
 
