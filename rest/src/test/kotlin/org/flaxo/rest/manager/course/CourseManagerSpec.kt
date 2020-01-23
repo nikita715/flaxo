@@ -24,11 +24,12 @@ class CourseManagerSpec : SubjectSpek<CourseManager>({
     val course = Course(id = 1, name = "course", user = user)
     val anotherUser = User(id = 2, name = "anotherUser")
     val settings = CourseSettings(id = 1, language = "language", testingLanguage = "testingLanguage",
-            testingFramework = "testingFramework", notificationOnScoreChange = false,
-            scoreChangeNotificationTemplate = null)
+            testingFramework = "testingFramework", plagiarismFilePattern = "plagiarismFilePattern",
+            notificationOnScoreChange = false, scoreChangeNotificationTemplate = null)
     val anotherSettings = CourseSettings(id = 2, language = "anotherLanguage",
             testingLanguage = "anotherTestingLanguage", testingFramework = "anotherTestingFramework",
-            notificationOnScoreChange = false, scoreChangeNotificationTemplate = null)
+            plagiarismFilePattern = "anotherPlagiarismFilePattern", notificationOnScoreChange = false,
+            scoreChangeNotificationTemplate = null)
 
     val dataManager = mock<DataManager> {
         on { getUser(eq(user.name)) }.thenReturn(user)
@@ -73,6 +74,7 @@ class CourseManagerSpec : SubjectSpek<CourseManager>({
                         language shouldEqual anotherSettings.language
                         testingLanguage shouldEqual anotherSettings.testingLanguage
                         testingFramework shouldEqual anotherSettings.testingFramework
+                        plagiarismFilePattern shouldEqual anotherSettings.plagiarismFilePattern
                     }
                 }
 
@@ -82,7 +84,8 @@ class CourseManagerSpec : SubjectSpek<CourseManager>({
                             id == anotherSettings.id &&
                                     language == anotherSettings.language &&
                                     testingLanguage == anotherSettings.testingLanguage &&
-                                    testingFramework == anotherSettings.testingFramework
+                                    testingFramework == anotherSettings.testingFramework &&
+                                    plagiarismFilePattern == anotherSettings.plagiarismFilePattern
                         }
                     })
                 }
